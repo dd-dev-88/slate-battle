@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- App Update Tag: SlateBattle-v1.6-FullScreenMobile -->
+    <!-- App Update Tag: SlateBattle-v1.7-ImmersiveMenu -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slate Battle - Le duel de mots</title>
@@ -20,7 +20,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             min-height: 100vh;
             width: 100vw;
             overflow-x: hidden;
@@ -28,66 +28,73 @@
         }
         .container {
             width: 100%;
-            max-width: 100%;
-            flex: 1;
-            background: rgba(30, 41, 59, 0.95);
-            padding: 12px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            max-width: 480px;
+            height: 100vh;
+            max-height: 850px;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(56, 189, 248, 0.3);
             text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
+
+        /* Menu Principal en plein écran immersif avec image.jpg en fond */
+        #menuScreen {
+            background-image: linear-gradient(rgba(10, 15, 25, 0.7), rgba(10, 15, 25, 0.85)), url('image.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
         h1 {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             margin-bottom: 2px;
             color: #38bdf8;
             font-weight: 800;
             letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 20px rgba(56, 189, 248, 0.5);
         }
         .subtitle {
-            color: #94a3b8;
-            font-size: 0.8rem;
-            margin-bottom: 6px;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
         }
         .coins-display {
-            background: rgba(250, 204, 21, 0.1);
+            background: rgba(15, 23, 42, 0.85);
             color: #facc15;
-            border: 1px solid rgba(250, 204, 21, 0.3);
-            padding: 3px 8px;
+            border: 1px solid rgba(250, 204, 21, 0.4);
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: bold;
             display: inline-block;
-            margin-bottom: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .intro-showcase {
-            margin: 6px 0;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(56, 189, 248, 0.4);
-            background: #0b1120;
-            flex-grow: 1;
-            max-height: 240px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+
+        .menu-buttons-box {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
         }
-        .intro-showcase img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+
         .btn {
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: white;
             border: none;
-            padding: 12px;
+            padding: 11px;
             font-size: 0.95rem;
             font-weight: 600;
             border-radius: 10px;
@@ -150,7 +157,7 @@
             display: none !important;
         }
 
-        /* Écran de jeu en plein écran avec ton image ardoise.jpg */
+        /* Écran de jeu en plein écran avec l'ardoise.jpg */
         #gameScreen {
             background-image: linear-gradient(rgba(10, 15, 25, 0.8), rgba(10, 15, 25, 0.8)), url('ardoise.jpg');
             background-size: cover;
@@ -300,24 +307,19 @@
 <body>
 
     <div class="container" id="mainContainer">
-        <!-- MENU PRINCIPAL AVEC LA VITRINE -->
-        <div id="menuScreen" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+        <!-- MENU PRINCIPAL IMMERSIF (image.jpg en arrière-plan global) -->
+        <div id="menuScreen">
             <div>
                 <h1>Slate Battle ✏️</h1>
                 <p class="subtitle">Le duel de mots en français</p>
                 <div class="coins-display">🪙 Pièces : <span id="playerCoins">50</span></div>
             </div>
 
-            <div class="intro-showcase">
-                <img src="image.jpg" alt="Duel en direct entre amis" onerror="this.style.display='none'; document.getElementById('imgErrorMsg').style.display='block';">
-                <div id="imgErrorMsg" style="display:none; color: #f87171; font-size: 0.8rem; padding: 10px;">⚠️ Fichier image.jpg introuvable.</div>
-            </div>
-            
-            <div>
+            <div class="menu-buttons-box">
                 <input type="text" id="playerNameInput" placeholder="Ton pseudo (ex: Dédé)..." maxlength="12">
-                <button class="btn" id="localBtn">Jouer en solo</button>
-                <button class="btn btn-secondary" id="hostBtn">Créer une partie (En ligne)</button>
-                <button class="btn btn-secondary" id="joinBtn">Rejoindre une partie</button>
+                <button class="btn" id="localBtn">🎮 Jouer en solo</button>
+                <button class="btn btn-secondary" id="hostBtn">🌐 Créer une partie (En ligne)</button>
+                <button class="btn btn-secondary" id="joinBtn">🔑 Rejoindre une partie</button>
                 <div style="margin-top: 5px;">
                     <a href="https://wa.me/?text=Viens%20on%20joue%20à%20Slate%20Battle%20sur%20https://dd-dev-88.github.io/slate-battle/" target="_blank" class="btn btn-whatsapp">💬 Inviter sur WhatsApp</a>
                 </div>
