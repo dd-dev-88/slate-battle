@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- App Update Tag: SlateBattle-v2.4-CoreEngine -->
+    <!-- App Update Tag: SlateBattle-v2.5-StableEngine -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slate Battle - Le duel de mots</title>
@@ -149,7 +149,7 @@
         .hidden { display: none !important; }
         .room-box { background: #0b1120; padding: 10px; border-radius: 8px; color: #38bdf8; font-family: monospace; font-size: 1.1rem; margin: 8px 0; text-align: center; letter-spacing: 2px; border: 1px solid #334155; }
         
-        /* Modals / Panneaux contextuels */
+        /* Modals */
         .modal-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10;
@@ -164,17 +164,17 @@
     <div class="arcade-container" id="mainContainer">
         <div class="arcade-header">
             <h1>Slate Battle ✏️</h1>
-            <div class="coins-display">🪙 Pièces : <span id="playerCoins">75</span></div>
+            <div class="coins-display">🪙 Pièces : <span id="playerCoins">50</span></div>
         </div>
 
         <div class="arcade-screen-center">
             
-            <!-- 1. ÉCRAN D'ENREGISTREMENT (Profil LocalStorage) -->
+            <!-- 1. ENREGISTREMENT DU PROFIL (Première connexion) -->
             <div id="registerScreen" class="wood-menu-box hidden">
-                <h3 style="color: #38bdf8;">Profil Joueur</h3>
-                <p style="font-size: 0.8rem; color: #94a3b8;">Choisis ton pseudo pour commencer :</p>
-                <input type="text" id="registerNameInput" placeholder="Ton pseudo (ex: Dédé)..." maxlength="12">
-                <button class="btn-wood btn-green" id="registerBtn">💾 Sauvegarder & Jouer</button>
+                <h3 style="color: #38bdf8;">Création du Profil</h3>
+                <p style="font-size: 0.8rem; color: #94a3b8;">Entre ton pseudo unique pour enregistrer ton compte sur cet appareil :</p>
+                <input type="text" id="registerNameInput" placeholder="Ex: Dédé..." maxlength="12">
+                <button class="btn-wood btn-green" id="registerBtn">💾 Créer mon profil</button>
             </div>
 
             <!-- 2. MENU PRINCIPAL -->
@@ -185,24 +185,24 @@
                 <button class="btn-wood" id="joinBtn">🔑 REJOINDRE PARTIE</button>
             </div>
 
-            <!-- 3. ÉCRAN HÔTE (Lobby 4 chiffres) -->
+            <!-- 3. SALON HÔTE (Code 4 chiffres) -->
             <div id="hostScreen" class="wood-menu-box hidden">
-                <p style="color: #cbd5e1; font-size: 0.85rem;">Donne ce code à ton ami :</p>
+                <p style="color: #cbd5e1; font-size: 0.85rem;">Envoie ce code à ton ami :</p>
                 <div class="room-box" id="myPeerId">Génération...</div>
-                <p style="color: #f59e0b; font-size: 0.8rem;" id="hostStatusText">En attente de l'adversaire...</p>
+                <p style="color: #f59e0b; font-size: 0.8rem;" id="hostStatusText">En attente de connexion...</p>
                 <button class="btn-wood btn-green" id="shareCodeWhatsApp">💬 Partager sur WhatsApp</button>
                 <button class="btn-wood" id="backFromHost" style="background: #334155; border-color: #64748b;">Retour</button>
             </div>
 
-            <!-- 4. ÉCRAN REJOINDRE -->
+            <!-- 4. REJOINDRE UN SALON -->
             <div id="joinScreen" class="wood-menu-box hidden">
-                <p style="color: #cbd5e1; font-size: 0.85rem;">Entre le code à 4 chiffres :</p>
+                <p style="color: #cbd5e1; font-size: 0.85rem;">Entre le code à 4 chiffres de l'hôte :</p>
                 <input type="text" id="joinCodeInput" placeholder="Ex: 4812" maxlength="4">
                 <button class="btn-wood btn-green" id="connectBtn">Se connecter au salon</button>
                 <button class="btn-wood" id="backFromJoin" style="background: #334155; border-color: #64748b;">Retour</button>
             </div>
 
-            <!-- 5. ÉCRAN DE JEU INDÉPENDANT -->
+            <!-- 5. ÉCRAN DE JEU -->
             <div id="gameScreen" class="hidden">
                 <div class="scoreboard">
                     <div><span id="myNameDisp">Moi</span> : <span id="myScore">0</span></div>
@@ -218,7 +218,7 @@
                 <div style="margin: 10px 0; text-align: center;">
                     <div id="themeDisplay" style="font-size: 0.75rem; color: #38bdf8; text-transform: uppercase;">Devine le mot !</div>
                     <div id="wordDisplay">_ _ _ _ _</div>
-                    <div id="statusInfo" style="font-size: 0.75rem; color: #cbd5e1; margin-top: 5px;"></div>
+                    <div id="statusInfo" style="font-size: 0.75rem; color: #cbd5e1; margin-top: 5px;">Mode Duel Actif</div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
                         <span id="errorsDisplay" style="color: #cbd5e1; font-size: 0.75rem;">Erreurs : 0 / 6</span>
                     </div>
@@ -229,30 +229,49 @@
 
         </div>
 
-        <!-- BARRE D'ICÔNES DU BAS (Fonctionnelle) -->
+        <!-- BARRE D'ICÔNES DU BAS -->
         <div class="arcade-footer-icons" id="footerIcons">
             <button class="icon-btn" onclick="openModal('chatModal')" title="Messages">💬</button>
             <button class="icon-btn" onclick="openModal('statsModal')" title="Classement / Trophées">🏆</button>
-            <button class="icon-btn" onclick="openModal('shopModal')" title="Boutique / Indices">⭐</button>
+            <button class="icon-btn" onclick="alert('Boutique d’indices bientôt active !')" title="Boutique">⭐</button>
             <button class="icon-btn" onclick="openModal('settingsModal')" title="Paramètres">⚙️</button>
         </div>
     </div>
 
-    <!-- MODALS (FENÊTRES POPUP DES ICÔNES) -->
+    <!-- MODAL PARAMÈTRES (Son & Profil) -->
     <div id="settingsModal" class="modal-overlay hidden">
         <div class="modal-box">
-            <h3 style="color: #f59e0b; margin-bottom: 10px;">⚙️ Paramètres</h3>
-            <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Pseudo actuel : <b id="currentPseudoDisplay"></b></p>
-            <button class="btn-wood" onclick="resetProfile()" style="background: #dc2626; border-color: #ef4444; margin-bottom: 8px;">Changer de pseudo</button>
+            <h3 style="color: #f59e0b; margin-bottom: 10px;">⚙️ Paramètres du Jeu</h3>
+            <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 6px;">Compte : <b id="currentPseudoDisplay"></b></p>
+            <div style="margin: 12px 0; text-align: left; font-size: 0.85rem; background: #0f172a; padding: 10px; border-radius: 8px;">
+                <label style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                    Effets Sonores : <input type="checkbox" id="soundToggle" checked onchange="toggleSound()">
+                </label>
+            </div>
+            <button class="btn-wood" onclick="resetProfile()" style="background: #dc2626; border-color: #ef4444; margin-bottom: 8px;">Supprimer / Refaire le profil</button>
             <button class="btn-wood" onclick="closeModals()" style="background: #334155; border-color: #64748b;">Fermer</button>
         </div>
     </div>
 
+    <!-- MODAL STATS -->
     <div id="statsModal" class="modal-overlay hidden">
         <div class="modal-box">
-            <h3 style="color: #f59e0b; margin-bottom: 10px;">🏆 Statistiques</h3>
-            <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 5px;">Victoires en solo : <b id="statWins">0</b></p>
-            <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 15px;">Pièces accumulées : <b id="statCoins">75</b> 🪙</p>
+            <h3 style="color: #f59e0b; margin-bottom: 10px;">🏆 Trophées & Stats</h3>
+            <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 5px;">Victoires enregistrées : <b id="statWins">0</b></p>
+            <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 15px;">Solde de pièces : <b id="statCoins">50</b> 🪙</p>
+            <button class="btn-wood" onclick="closeModals()" style="background: #334155; border-color: #64748b;">Fermer</button>
+        </div>
+    </div>
+
+    <!-- MODAL CHAT / TAUNTS -->
+    <div id="chatModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 style="color: #f59e0b; margin-bottom: 10px;">💬 Taquineries rapides</h3>
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;">
+                <button class="btn-wood" style="padding: 8px; font-size: 0.85rem;" onclick="sendTauntAction('🐢 Plus vite !')">🐢 Plus vite !</button>
+                <button class="btn-wood" style="padding: 8px; font-size: 0.85rem;" onclick="sendTauntAction('😎 Trop facile !')">😎 Trop facile !</button>
+                <button class="btn-wood" style="padding: 8px; font-size: 0.85rem;" onclick="sendTauntAction('🔥 Je chauffe !')">🔥 Je chauffe !</button>
+            </div>
             <button class="btn-wood" onclick="closeModals()" style="background: #334155; border-color: #64748b;">Fermer</button>
         </div>
     </div>
@@ -293,7 +312,9 @@
         const statWins = document.getElementById('statWins');
         const statCoins = document.getElementById('statCoins');
         const playerCoinsEl = document.getElementById('playerCoins');
+        const soundToggle = document.getElementById('soundToggle');
 
+        // Gestion du profil unique par téléphone (LocalStorage)
         let playerName = localStorage.getItem('slate_username') || "";
         let opponentName = "Adversaire";
         let peer = null, conn = null, shortRoomId = "";
@@ -304,13 +325,14 @@
         let myScore = 0;
         let opponentScore = 0;
         let soloWins = parseInt(localStorage.getItem('slate_wins') || "0");
-        let playerCoins = parseInt(localStorage.getItem('slate_coins') || "75");
+        let playerCoins = parseInt(localStorage.getItem('slate_coins') || "50");
+        let soundEnabled = localStorage.getItem('slate_sound') !== 'false';
         let timeLeft = 60;
         let timer = null;
         let isMultiplayer = false;
 
-        // Initialisation au chargement
         window.addEventListener('DOMContentLoaded', () => {
+            soundToggle.checked = soundEnabled;
             playerCoinsEl.innerText = playerCoins;
             statCoins.innerText = playerCoins;
             statWins.innerText = soloWins;
@@ -342,13 +364,9 @@
             }
         }
 
-        // Enregistrement du profil dans localStorage
         registerBtn.addEventListener('click', () => {
             const name = registerNameInput.value.trim();
-            if (!name) {
-                alert("Entre un pseudo valide !");
-                return;
-            }
+            if (!name) { alert("Entre un pseudo valide !"); return; }
             playerName = name;
             localStorage.setItem('slate_username', playerName);
             welcomeUserDisp.innerText = `Salut, ${playerName} !`;
@@ -357,19 +375,37 @@
         });
 
         function resetProfile() {
-            if (confirm("Veux-tu vraiment changer de pseudo ?")) {
+            if (confirm("Effacer ton profil de cet appareil ?")) {
                 localStorage.removeItem('slate_username');
                 location.reload();
             }
         }
 
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
+        function toggleSound() {
+            soundEnabled = soundToggle.checked;
+            localStorage.setItem('slate_sound', soundEnabled);
         }
 
-        function closeModals() {
-            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (!soundEnabled) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            if (type === 'correct') {
+                osc.frequency.setValueAtTime(587.33, now); osc.frequency.setValueAtTime(880, now + 0.08);
+            } else {
+                osc.frequency.setValueAtTime(150, now);
+            }
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc.start(now); osc.stop(now + 0.2);
         }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden')); }
 
         function generateShortId() {
             return Math.floor(1000 + Math.random() * 9000).toString();
@@ -398,21 +434,25 @@
 
             if (!displayed.includes('_')) {
                 clearInterval(timer);
+                playSound('correct');
                 alert("Bravo, mot trouvé ! +1 point.");
                 myScore++;
-                if (!isMultiplayer) {
-                    soloWins++;
-                    playerCoins += 25;
-                    localStorage.setItem('slate_wins', soloWins);
-                    localStorage.setItem('slate_coins', playerCoins);
-                    statWins.innerText = soloWins;
-                    statCoins.innerText = playerCoins;
-                    playerCoinsEl.innerText = playerCoins;
-                } else if (conn && conn.open) {
+                playerCoins += 15;
+                saveUserData();
+
+                if (isMultiplayer && conn && conn.open) {
                     conn.send({ type: 'SCORE_UPDATE', score: myScore });
                 }
                 setTimeout(startNewRound, 1500);
             }
+        }
+
+        function saveUserData() {
+            localStorage.setItem('slate_wins', soloWins);
+            localStorage.setItem('slate_coins', playerCoins);
+            playerCoinsEl.innerText = playerCoins;
+            statCoins.innerText = playerCoins;
+            statWins.innerText = soloWins;
         }
 
         function startTimer() {
@@ -424,6 +464,7 @@
                 timerDisplay.innerText = `⏳ ${timeLeft}s`;
                 if (timeLeft <= 0) {
                     clearInterval(timer);
+                    playSound('wrong');
                     alert(`Temps écoulé ! Le mot était : ${currentWord}`);
                     startNewRound();
                 }
@@ -443,10 +484,12 @@
         localBtn.addEventListener('click', () => {
             isMultiplayer = false;
             opponentName = "Solo Bot";
+            statusInfo.innerText = "Mode Solo - Entraînement";
             showView('game');
             startNewRound();
         });
 
+        // CONNEXION HÔTE 1V1 STABLE
         hostBtn.addEventListener('click', () => {
             showView('host');
             if (peer) peer.destroy();
@@ -462,7 +505,7 @@
             peer.on('connection', (c) => {
                 conn = c;
                 isMultiplayer = true;
-                hostStatusText.innerText = "Adversaire connecté !";
+                hostStatusText.innerText = "Adversaire connecté ! Lancement...";
                 setupConnectionListeners();
                 
                 conn.on('open', () => {
@@ -470,29 +513,26 @@
                 });
 
                 setTimeout(() => {
+                    statusInfo.innerText = "Duel en ligne en cours !";
                     showView('game');
                     startNewRound();
-                }, 1200);
+                }, 1000);
             });
 
-            peer.on('error', (err) => {
-                if (err.type === 'unavailable-id') {
-                    shortRoomId = generateShortId();
-                    peer.destroy();
-                    peer = new Peer('slate-' + shortRoomId);
-                    peer.on('open', () => { myPeerIdEl.innerText = shortRoomId; });
-                }
+            peer.on('error', () => {
+                shortRoomId = generateShortId();
+                peer.destroy();
+                peer = new Peer('slate-' + shortRoomId);
+                peer.on('open', () => { myPeerIdEl.innerText = shortRoomId; });
             });
         });
 
         joinBtn.addEventListener('click', () => showView('join'));
 
+        // CONNEXION INVITÉ 1V1 STABLE
         connectBtn.addEventListener('click', () => {
             const code = joinCodeInput.value.trim();
-            if (!code || code.length !== 4) {
-                alert("Entre un code à 4 chiffres valide !");
-                return;
-            }
+            if (!code || code.length !== 4) { alert("Entre un code à 4 chiffres valide !"); return; }
             if (peer) peer.destroy();
             
             peer = new Peer();
@@ -503,6 +543,7 @@
 
                 conn.on('open', () => {
                     conn.send({ type: 'PLAYER_INFO', name: playerName });
+                    statusInfo.innerText = "Connecté à l'hôte ! Prépare-toi.";
                     showView('game');
                     startNewRound();
                 });
@@ -518,8 +559,20 @@
                 } else if (data.type === 'SCORE_UPDATE') {
                     opponentScore = data.score;
                     opponentScoreEl.innerText = opponentScore;
+                } else if (data.type === 'TAUNT_MSG') {
+                    alert(`${opponentName} t'envoie : "${data.msg}"`);
                 }
             });
+        }
+
+        function sendTauntAction(msg) {
+            closeModals();
+            if (isMultiplayer && conn && conn.open) {
+                conn.send({ type: 'TAUNT_MSG', msg: msg });
+                alert("Taquinerie envoyée !");
+            } else {
+                alert("Disponible uniquement en mode multijoueur 1v1 !");
+            }
         }
 
         shareCodeWhatsApp.addEventListener('click', () => {
@@ -545,9 +598,10 @@
             document.getElementById(`key-${letter}`).disabled = true;
 
             if (currentWord.includes(letter)) {
-                // Correct
+                playSound('correct');
             } else {
                 errors++;
+                playSound('wrong');
                 if (errors >= 6) {
                     clearInterval(timer);
                     alert(`Oups ! Perdu. Le mot était : ${currentWord}`);
