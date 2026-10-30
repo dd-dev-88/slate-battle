@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- App Update Tag: SlateBattle-v2.2-CustomWords -->
+    <!-- App Update Tag: SlateBattle-v2.3-CleanMultiplayer -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slate Battle - Le duel de mots</title>
@@ -51,7 +51,7 @@
             border: 2px solid #854d0e;
         }
         h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #facc15;
             font-weight: 900;
             text-transform: uppercase;
@@ -76,8 +76,9 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
+            text-align: center;
         }
         input[type="text"] {
             width: 100%;
@@ -123,7 +124,7 @@
             display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none;
         }
         
-        #gameScreen, #wordInputScreen {
+        #gameScreen {
             background: rgba(15, 23, 42, 0.95);
             border: 2px solid #38bdf8;
             border-radius: 14px;
@@ -158,45 +159,45 @@
 
         <div class="arcade-screen-center">
             
-            <!-- 1. MENU PRINCIPAL -->
-            <div id="menuScreen" class="wood-menu-box">
-                <input type="text" id="playerNameInput" placeholder="Ton pseudo (ex: Dédé)..." maxlength="12">
+            <!-- 1. ÉCRAN D'ENREGISTREMENT (OBLIGATOIRE) -->
+            <div id="registerScreen" class="wood-menu-box">
+                <h3 style="color: #38bdf8;">Bienvenue !</h3>
+                <p style="font-size: 0.8rem; color: #94a3b8;">Entre ton pseudo pour t'enregistrer sur l'application :</p>
+                <input type="text" id="registerNameInput" placeholder="Ton pseudo (ex: Dédé)..." maxlength="12">
+                <button class="btn-wood btn-green" id="registerBtn">💾 S'enregistrer & Jouer</button>
+            </div>
+
+            <!-- 2. MENU PRINCIPAL (Une fois enregistré) -->
+            <div id="menuScreen" class="wood-menu-box hidden">
+                <p style="color: #38bdf8; font-weight: bold;" id="welcomeUserDisp">Salut Joueur !</p>
                 <button class="btn-wood" id="localBtn">🎮 JOUER EN SOLO</button>
                 <button class="btn-wood" id="hostBtn">🌐 CRÉER PARTIE (1v1)</button>
                 <button class="btn-wood" id="joinBtn">🔑 REJOINDRE PARTIE</button>
             </div>
 
-            <!-- 2. ECRAN HÔTE (Code court) -->
-            <div id="hostScreen" class="wood-menu-box hidden" style="text-align: center;">
-                <p style="color: #cbd5e1; font-size: 0.85rem;">Voici ton code de salon à 4 chiffres :</p>
+            <!-- 3. ÉCRAN HÔTE (Salon avec code à 4 chiffres) -->
+            <div id="hostScreen" class="wood-menu-box hidden">
+                <p style="color: #cbd5e1; font-size: 0.85rem;">Donne ce code à ton ami :</p>
                 <div class="room-box" id="myPeerId">Génération...</div>
                 <p style="color: #f59e0b; font-size: 0.8rem;" id="hostStatusText">En attente de l'adversaire...</p>
                 <button class="btn-wood btn-green" id="shareCodeWhatsApp">💬 Partager sur WhatsApp</button>
-                <button class="btn-wood" id="backFromHost" style="background: #334155; border-color: #64748b; margin-top: 5px;">Retour</button>
+                <button class="btn-wood" id="backFromHost" style="background: #334155; border-color: #64748b;">Retour</button>
             </div>
 
-            <!-- 3. ECRAN REJOINDRE -->
-            <div id="joinScreen" class="wood-menu-box hidden" style="text-align: center;">
-                <p style="color: #cbd5e1; font-size: 0.85rem;">Entre le code à 4 chiffres de ton ami :</p>
-                <input type="text" id="joinCodeInput" placeholder="Ex: 4812" maxlength="6">
-                <button class="btn-wood btn-green" id="connectBtn">Se connecter</button>
-                <button class="btn-wood" id="backFromJoin" style="background: #334155; border-color: #64748b; margin-top: 5px;">Retour</button>
+            <!-- 4. ÉCRAN REJOINDRE -->
+            <div id="joinScreen" class="wood-menu-box hidden">
+                <p style="color: #cbd5e1; font-size: 0.85rem;">Entre le code à 4 chiffres :</p>
+                <input type="text" id="joinCodeInput" placeholder="Ex: 4812" maxlength="4">
+                <button class="btn-wood btn-green" id="connectBtn">Se connecter au salon</button>
+                <button class="btn-wood" id="backFromJoin" style="background: #334155; border-color: #64748b;">Retour</button>
             </div>
 
-            <!-- 4. SAISIE DU MOT POUR L'ADVERSAIRE -->
-            <div id="wordInputScreen" class="hidden" style="text-align: center; justify-content: center;">
-                <h3 style="color: #38bdf8; margin-bottom: 10px;">Crée un mot secret</h3>
-                <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">Entre un mot que ton adversaire devra deviner :</p>
-                <input type="text" id="secretWordInput" placeholder="Ex: TORTUE" style="text-transform: uppercase;">
-                <button class="btn-wood btn-green" id="sendSecretWordBtn" style="margin-top: 15px;">Valider et lancer !</button>
-            </div>
-
-            <!-- 5. ECRAN DE JEU -->
+            <!-- 5. ÉCRAN DE JEU INDépendant -->
             <div id="gameScreen" class="hidden">
                 <div class="scoreboard">
                     <div><span id="myNameDisp">Moi</span> : <span id="myScore">0</span></div>
                     <div>Manche : <span id="currentRound">1</span></div>
-                    <div>Adversaire : <span id="opponentScore">0</span></div>
+                    <div>Adversaire (<span id="oppNameDisp">Adversaire</span>) : <span id="opponentScore">0</span></div>
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
@@ -205,7 +206,7 @@
                 </div>
                 
                 <div style="margin: 10px 0; text-align: center;">
-                    <div id="themeDisplay" style="font-size: 0.75rem; color: #38bdf8; text-transform: uppercase;">Devine le mot secret !</div>
+                    <div id="themeDisplay" style="font-size: 0.75rem; color: #38bdf8; text-transform: uppercase;">Devine le mot !</div>
                     <div id="wordDisplay">_ _ _ _ _</div>
                     <div id="statusInfo" style="font-size: 0.75rem; color: #cbd5e1; margin-top: 5px;"></div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
@@ -221,19 +222,20 @@
         <div class="arcade-footer-icons" id="footerIcons">
             <a href="https://wa.me/?text=Viens%20on%20joue%20à%20Slate%20Battle%20sur%20https://dd-dev-88.github.io/slate-battle/" target="_blank" class="icon-btn" title="Inviter">💬</a>
             <button class="icon-btn" onclick="alert('Classement à venir !')">🏆</button>
-            <button class="icon-btn" onclick="alert('Slate Battle v2.2 - Dd & Tipi')">⭐</button>
+            <button class="icon-btn" onclick="alert('Slate Battle v2.3')">⭐</button>
             <button class="icon-btn" onclick="alert('Audio actif')">⚙️</button>
         </div>
     </div>
 
     <script>
+        const registerScreen = document.getElementById('registerScreen');
         const menuScreen = document.getElementById('menuScreen');
         const hostScreen = document.getElementById('hostScreen');
         const joinScreen = document.getElementById('joinScreen');
-        const wordInputScreen = document.getElementById('wordInputScreen');
         const gameScreen = document.getElementById('gameScreen');
         const footerIcons = document.getElementById('footerIcons');
 
+        const registerBtn = document.getElementById('registerBtn');
         const localBtn = document.getElementById('localBtn');
         const hostBtn = document.getElementById('hostBtn');
         const joinBtn = document.getElementById('joinBtn');
@@ -241,26 +243,25 @@
         const backFromHost = document.getElementById('backFromHost');
         const backFromJoin = document.getElementById('backFromJoin');
         const shareCodeWhatsApp = document.getElementById('shareCodeWhatsApp');
-        const sendSecretWordBtn = document.getElementById('sendSecretWordBtn');
 
-        const playerNameInput = document.getElementById('playerNameInput');
+        const registerNameInput = document.getElementById('registerNameInput');
         const joinCodeInput = document.getElementById('joinCodeInput');
-        const secretWordInput = document.getElementById('secretWordInput');
         const myPeerIdEl = document.getElementById('myPeerId');
         const wordDisplay = document.getElementById('wordDisplay');
         const themeDisplay = document.getElementById('themeDisplay');
         const timerDisplay = document.getElementById('timerDisplay');
         const errorsDisplay = document.getElementById('errorsDisplay');
         const virtualKeyboard = document.getElementById('virtualKeyboard');
-        const playerCoinsEl = document.getElementById('playerCoins');
         const hostStatusText = document.getElementById('hostStatusText');
+        const welcomeUserDisp = document.getElementById('welcomeUserDisp');
         const myNameDisp = document.getElementById('myNameDisp');
+        const oppNameDisp = document.getElementById('oppNameDisp');
         const myScoreEl = document.getElementById('myScore');
         const opponentScoreEl = document.getElementById('opponentScore');
         const statusInfo = document.getElementById('statusInfo');
 
-        let playerName = "Moi";
-        let playerCoins = 75;
+        let playerName = "";
+        let opponentName = "Adversaire";
         let peer = null, conn = null, shortRoomId = "";
         
         let currentWord = "JAVASCRIPT";
@@ -273,25 +274,37 @@
         let isMultiplayer = false;
 
         function showView(view) {
+            registerScreen.classList.add('hidden');
             menuScreen.classList.add('hidden');
             hostScreen.classList.add('hidden');
             joinScreen.classList.add('hidden');
-            wordInputScreen.classList.add('hidden');
             gameScreen.classList.add('hidden');
             footerIcons.style.display = 'flex';
 
+            if (view === 'register') registerScreen.classList.remove('hidden');
             if (view === 'menu') menuScreen.classList.remove('hidden');
             if (view === 'host') hostScreen.classList.remove('hidden');
             if (view === 'join') joinScreen.classList.remove('hidden');
-            if (view === 'wordInput') wordInputScreen.classList.remove('hidden');
             if (view === 'game') {
                 gameScreen.classList.remove('hidden');
                 footerIcons.style.display = 'none';
             }
         }
 
+        // 1. Enregistrement obligatoire
+        registerBtn.addEventListener('click', () => {
+            const name = registerNameInput.value.trim();
+            if (!name) {
+                alert("Entre un pseudo valide pour t'enregistrer !");
+                return;
+            }
+            playerName = name;
+            welcomeUserDisp.innerText = `Salut, ${playerName} !`;
+            showView('menu');
+        });
+
         function generateShortId() {
-            return Math.floor(1000 + Math.random() * 9000).toString(); // Code à 4 chiffres
+            return Math.floor(1000 + Math.random() * 9000).toString();
         }
 
         function buildKeyboard() {
@@ -311,6 +324,7 @@
             wordDisplay.innerText = displayed;
             errorsDisplay.innerText = `Erreurs : ${errors} / 6`;
             myNameDisp.innerText = playerName;
+            oppNameDisp.innerText = opponentName;
             myScoreEl.innerText = myScore;
             opponentScoreEl.innerText = opponentScore;
 
@@ -321,10 +335,7 @@
                 if (isMultiplayer && conn && conn.open) {
                     conn.send({ type: 'SCORE_UPDATE', score: myScore });
                 }
-                setTimeout(() => {
-                    if (isMultiplayer) showView('wordInput'); // Prochain tour, on redonne un mot
-                    else startSoloGame();
-                }, 1000);
+                setTimeout(startNewRound, 1500);
             }
         }
 
@@ -338,32 +349,35 @@
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     alert(`Temps écoulé ! Le mot était : ${currentWord}`);
-                    if (isMultiplayer) showView('wordInput');
-                    else startSoloGame();
+                    startNewRound();
                 }
             }, 1000);
         }
 
-        function startSoloGame() {
-            isMultiplayer = false;
+        function startNewRound() {
             const bank = ["PROGRAMME", "ORDINATEUR", "MAISON", "SOLEIL", "VICTOIRE", "AVENTURE"];
             currentWord = bank[Math.floor(Math.random() * bank.length)];
             errors = 0;
             guessedLetters = [];
             buildKeyboard();
             startTimer();
-            showView('game');
             updateWordDisplay();
         }
 
-        // Connexion Multijoueur PeerJS avec code court
+        localBtn.addEventListener('click', () => {
+            isMultiplayer = false;
+            opponentName = "Solo Bot";
+            showView('game');
+            startNewRound();
+        });
+
+        // 2. Création du salon (Hôte) avec code court
         hostBtn.addEventListener('click', () => {
-            if (playerNameInput.value.trim()) playerName = playerNameInput.value.trim();
             showView('host');
             if (peer) peer.destroy();
             
             shortRoomId = generateShortId();
-            peer = new Peer('slate-' + shortRoomId); // Préfixe unique pour éviter les conflits globaux
+            peer = new Peer('slate-' + shortRoomId);
 
             peer.on('open', () => {
                 myPeerIdEl.innerText = shortRoomId;
@@ -374,12 +388,21 @@
                 conn = c;
                 isMultiplayer = true;
                 hostStatusText.innerText = "Adversaire connecté !";
+                
                 setupConnectionListeners();
-                setTimeout(() => { showView('wordInput'); }, 1000);
+                
+                // Envoi de notre pseudo à l'invité dès la connexion
+                conn.on('open', () => {
+                    conn.send({ type: 'PLAYER_INFO', name: playerName });
+                });
+
+                setTimeout(() => {
+                    showView('game');
+                    startNewRound();
+                }, 1200);
             });
 
             peer.on('error', (err) => {
-                // Si le code à 4 chiffres existe déjà, on en regénère un autre automatiquement
                 if (err.type === 'unavailable-id') {
                     shortRoomId = generateShortId();
                     peer.destroy();
@@ -389,14 +412,15 @@
             });
         });
 
-        joinBtn.addEventListener('click', () => {
-            if (playerNameInput.value.trim()) playerName = playerNameInput.value.trim();
-            showView('join');
-        });
+        joinBtn.addEventListener('click', () => showView('join'));
 
+        // 3. Rejoindre un salon avec le code à 4 chiffres
         connectBtn.addEventListener('click', () => {
             const code = joinCodeInput.value.trim();
-            if (!code || code.length < 4) { alert("Entre un code à 4 chiffres valide !"); return; }
+            if (!code || code.length !== 4) {
+                alert("Entre un code à 4 chiffres valide !");
+                return;
+            }
             if (peer) peer.destroy();
             
             peer = new Peer();
@@ -404,8 +428,12 @@
                 conn = peer.connect('slate-' + code);
                 isMultiplayer = true;
                 setupConnectionListeners();
+
                 conn.on('open', () => {
-                    showView('wordInput');
+                    // Envoi de notre pseudo à l'hôte
+                    conn.send({ type: 'PLAYER_INFO', name: playerName });
+                    showView('game');
+                    startNewRound();
                 });
             });
         });
@@ -413,16 +441,9 @@
         function setupConnectionListeners() {
             if (!conn) return;
             conn.on('data', (data) => {
-                if (data.type === 'SECRET_WORD') {
-                    // L'adversaire nous a envoyé le mot à deviner !
-                    currentWord = data.word;
-                    errors = 0;
-                    guessedLetters = [];
-                    buildKeyboard();
-                    startTimer();
-                    showView('game');
-                    statusInfo.innerText = "Devine le mot choisi par ton adversaire !";
-                    updateWordDisplay();
+                if (data.type === 'PLAYER_INFO') {
+                    opponentName = data.name;
+                    oppNameDisp.innerText = opponentName;
                 } else if (data.type === 'SCORE_UPDATE') {
                     opponentScore = data.score;
                     opponentScoreEl.innerText = opponentScore;
@@ -430,32 +451,12 @@
             });
         }
 
-        sendSecretWordBtn.addEventListener('click', () => {
-            const secret = secretWordInput.value.trim().toUpperCase();
-            if (!secret || secret.length < 3) { alert("Entre un mot d'au moins 3 lettres !"); return; }
-            
-            if (conn && conn.open) {
-                // On envoie le mot secret à l'adversaire
-                conn.send({ type: 'SECRET_WORD', word: secret });
-                secretWordInput.value = "";
-                statusInfo.innerText = "En attente que l'adversaire trouve ton mot...";
-                showView('game');
-                // En attendant, on lui met un mot par défaut en local ou un écran d'attente
-                currentWord = "ATTENTE";
-                buildKeyboard();
-                updateWordDisplay();
-            } else {
-                alert("Connexion non établie avec l'adversaire !");
-            }
-        });
-
         shareCodeWhatsApp.addEventListener('click', () => {
             if (!shortRoomId) return;
-            const msg = encodeURIComponent(`Viens m'affronter sur Slate Battle ! Mon code de salon est : *${shortRoomId}* - Rejoins-moi ici : https://dd-dev-88.github.io/slate-battle/`);
+            const msg = encodeURIComponent(`Viens m'affronter sur Slate Battle ! Mon code salon est : *${shortRoomId}* - Rejoins-moi ici : https://dd-dev-88.github.io/slate-battle/`);
             window.open(`https://wa.me/?text=${msg}`, '_blank');
         });
 
-        localBtn.addEventListener('click', startSoloGame);
         backFromHost.addEventListener('click', () => { showView('menu'); if (peer) peer.destroy(); });
         backFromJoin.addEventListener('click', () => { showView('menu'); if (peer) peer.destroy(); });
 
@@ -471,7 +472,7 @@
             if (guessedLetters.includes(letter)) return;
             guessedLetters.push(letter);
             document.getElementById(`key-${letter}`).disabled = true;
-            
+
             if (currentWord.includes(letter)) {
                 // Bonne lettre
             } else {
@@ -479,8 +480,7 @@
                 if (errors >= 6) {
                     clearInterval(timer);
                     alert(`Oups ! Perdu. Le mot était : ${currentWord}`);
-                    if (isMultiplayer) showView('wordInput');
-                    else startSoloGame();
+                    startNewRound();
                     return;
                 }
             }
