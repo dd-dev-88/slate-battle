@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- App Update Tag: SlateBattle-v1.2-FullVitrine -->
+    <!-- App Update Tag: SlateBattle-v1.4-HostFix -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slate Battle - Le duel de mots</title>
@@ -301,17 +301,18 @@
             <button class="btn btn-secondary" id="hostBtn">Créer une partie (En ligne)</button>
             <button class="btn btn-secondary" id="joinBtn">Rejoindre une partie</button>
             <div style="margin-top: 10px;">
-                <a href="https://wa.me/?text=Viens%20on%2520joue%20à%20Slate%20Battle%20sur%20https://slate-battle-app.netlify.app" target="_blank" class="btn btn-whatsapp">💬 Inviter sur WhatsApp</a>
+                <a href="https://wa.me/?text=Viens%20on%20joue%20à%20Slate%20Battle%20sur%20https://dd-dev-88.github.io/slate-battle/" target="_blank" class="btn btn-whatsapp">💬 Inviter sur WhatsApp</a>
             </div>
         </div>
 
         <!-- ECRAN HOTE -->
         <div id="hostScreen" class="hidden">
             <h1>Slate Battle ✏️</h1>
-            <p style="font-size: 0.85rem; color: #94a3b8;">Envoie ce code à ton ami :</p>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 4px;">Envoie ce code à ton ami :</p>
             <div class="room-box" id="myPeerId">Génération du code...</div>
             <p style="font-size: 0.80rem; color: #f59e0b; margin-top: 6px;"><span class="status-badge" id="hostStatusBadge"></span><span id="hostStatusText">En attente de l'adversaire...</span></p>
-            <button class="btn btn-secondary" id="backFromHost" style="margin-top: 12px;">Retour</button>
+            <button class="btn btn-whatsapp" id="shareCodeWhatsApp" style="margin-top: 10px;">💬 Partager le code sur WhatsApp</button>
+            <button class="btn btn-secondary" id="backFromHost" style="margin-top: 8px;">Retour au menu</button>
         </div>
 
         <!-- ECRAN REJOINDRE -->
@@ -444,6 +445,7 @@
         const connectBtn = document.getElementById('connectBtn');
         const backFromHost = document.getElementById('backFromHost');
         const backFromJoin = document.getElementById('backFromJoin');
+        const shareCodeWhatsApp = document.getElementById('shareCodeWhatsApp');
 
         const myPeerIdEl = document.getElementById('myPeerId');
         const joinCodeInput = document.getElementById('joinCodeInput');
@@ -499,6 +501,7 @@
 
         let peer = null;
         let conn = null;
+        let generatedRoomId = "";
 
         function getRandomWordItem() {
             const index = Math.floor(Math.random() * wordBank.length);
@@ -626,28 +629,61 @@
 
         localBtn.addEventListener('click', () => { startGame(); });
 
+        // Créer une partie : reste bien sur l'écran hôte sans boucler
         hostBtn.addEventListener('click', () => {
+            const enteredName = playerNameInput.value.trim();
+            if (enteredName) { playerName = enteredName; }
             menuScreen.classList.add('hidden');
             hostScreen.classList.remove('hidden');
+            
+            hostStatusBadge.classList.remove('connected');
+            hostStatusText.innerText = "En attente de l'adversaire...";
+            myPeerIdEl.innerText = "Génération du code...";
+
+            if (peer) {
+                peer.destroy();
+            }
+
             peer = new Peer();
-            peer.on('open', (id) => { myPeerIdEl.innerText = id; });
+            peer.on('open', (id) => {
+                generatedRoomId = id;
+                myPeerIdEl.innerText = id;
+            });
             peer.on('connection', (c) => {
                 conn = c;
                 hostStatusBadge.classList.add('connected');
                 hostStatusText.innerText = "Adversaire connecté ! Lancement...";
                 setupConnection();
-                setTimeout(() => { startGame(); }, 1000);
+                setTimeout(() => { startGame(); }, 1200);
             });
         });
 
+        // Bouton de partage direct du code salon sur WhatsApp
+        shareCodeWhatsApp.addEventListener('click', () => {
+            if (!generatedRoomId) {
+                alert("Patiente une seconde, génération du code en cours...");
+                return;
+            }
+            const msg = encodeURIComponent(`Viens m'affronter sur Slate Battle ! Voici mon code de salon : ${generatedRoomId} - Rejoins-moi ici : https://dd-dev-88.github.io/slate-battle/`);
+            window.open(`https://wa.me/?text=${msg}`, '_blank');
+        });
+
         joinBtn.addEventListener('click', () => {
+            const enteredName = playerNameInput.value.trim();
+            if (enteredName) { playerName = enteredName; }
             menuScreen.classList.add('hidden');
             joinScreen.classList.remove('hidden');
         });
 
         connectBtn.addEventListener('click', () => {
             const code = joinCodeInput.value.trim();
-            if (!code) return;
+            if (!code) {
+                alert("Entre un code valide !");
+                return;
+            }
+            if (peer) {
+                peer.destroy();
+            }
             peer = new Peer();
             peer.on('open', () => {
                 conn = peer.connect(code);
@@ -659,15 +695,17 @@
         backFromHost.addEventListener('click', () => {
             hostScreen.classList.add('hidden');
             menuScreen.classList.remove('hidden');
-            if (peer) peer.destroy();
+            if (peer) { peer.destroy(); peer = null; }
         });
 
         backFromJoin.addEventListener('click', () => {
             joinScreen.classList.add('hidden');
             menuScreen.classList.remove('hidden');
+            if (peer) { peer.destroy(); peer = null; }
         });
 
         function setupConnection() {
+            if (!conn) return;
             conn.on('data', (data) => {
                 if (data.type === 'TAUNT') {
                     playSound('taunt');
