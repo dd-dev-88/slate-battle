@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- App Update Tag: SlateBattle-v1.4-HostFix -->
+    <!-- App Update Tag: SlateBattle-v1.5-ArdoiseImg -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slate Battle - Le duel de mots</title>
@@ -144,14 +144,15 @@
             display: none !important;
         }
 
-        /* Style de l'ardoise africaine en arrière-plan pour la zone de jeu */
+        /* Utilisation de ta magnifique image d'ardoise en arrière-plan du jeu */
         #gameScreen {
-            border: 8px solid #5c3a21;
-            border-radius: 12px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 25px rgba(0,0,0,0.5);
-            background-color: #12181f;
-            background-image: linear-gradient(rgba(18,24,31,0.9), rgba(18,24,31,0.9)), repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,0.05) 19px, rgba(255,255,255,0.05) 20px), repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,0.05) 19px, rgba(255,255,255,0.05) 20px);
-            padding: 12px;
+            background-image: linear-gradient(rgba(10, 15, 25, 0.75), rgba(10, 15, 25, 0.75)), url('ardoise.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 4px solid #5c3a21;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            padding: 15px;
         }
 
         #themeDisplay {
@@ -161,6 +162,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 4px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
         }
         #wordDisplay {
             font-size: 1.6rem;
@@ -168,22 +170,23 @@
             margin: 8px 0;
             color: #facc15;
             font-weight: bold;
-            text-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 20px rgba(250, 204, 21, 0.5);
         }
         #timerDisplay {
             font-size: 0.9rem;
             color: #f87171;
             font-weight: 700;
-            background: rgba(248, 113, 113, 0.1);
+            background: rgba(15, 23, 42, 0.8);
             padding: 4px 8px;
             border-radius: 20px;
             display: inline-block;
+            border: 1px solid rgba(248, 113, 113, 0.3);
         }
         .scoreboard {
             display: flex;
             justify-content: space-around;
             margin-bottom: 8px;
-            background: rgba(11, 17, 32, 0.8);
+            background: rgba(11, 17, 32, 0.85);
             padding: 6px;
             border-radius: 10px;
             border: 1px solid #334155;
@@ -234,7 +237,7 @@
             margin-top: 10px;
         }
         .key-btn {
-            background: #334155;
+            background: rgba(51, 65, 85, 0.9);
             color: white;
             border: none;
             padding: 8px 0;
@@ -243,12 +246,13 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
         .key-btn:hover:not(:disabled) {
             background: #0284c7;
         }
         .key-btn:disabled {
-            background: #1e293b;
+            background: rgba(30, 41, 59, 0.6);
             color: #64748b;
             cursor: not-allowed;
             border: 1px solid #1e293b;
@@ -261,7 +265,7 @@
             margin-top: 8px;
         }
         .taunt-btn {
-            background: #1e293b;
+            background: rgba(30, 41, 59, 0.85);
             border: 1px solid #475569;
             color: #cbd5e1;
             padding: 4px 6px;
@@ -279,6 +283,7 @@
             height: 16px;
             margin-bottom: 2px;
             font-style: italic;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.9);
         }
     </style>
 </head>
@@ -340,7 +345,7 @@
             <div id="wordDisplay">_ _ _ _ _</div>
             <div id="chatLog"></div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div id="errorsDisplay" style="color: #cbd5e1; font-size: 0.8rem;">Erreurs : 0 / 6</div>
+                <div id="errorsDisplay" style="color: #cbd5e1; font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.9);">Erreurs : 0 / 6</div>
                 <button class="btn-bonus" onclick="buyHint()">💡 Indice (-20 🪙)</button>
             </div>
 
@@ -629,7 +634,6 @@
 
         localBtn.addEventListener('click', () => { startGame(); });
 
-        // Créer une partie : reste bien sur l'écran hôte sans boucler
         hostBtn.addEventListener('click', () => {
             const enteredName = playerNameInput.value.trim();
             if (enteredName) { playerName = enteredName; }
@@ -640,9 +644,7 @@
             hostStatusText.innerText = "En attente de l'adversaire...";
             myPeerIdEl.innerText = "Génération du code...";
 
-            if (peer) {
-                peer.destroy();
-            }
+            if (peer) { peer.destroy(); }
 
             peer = new Peer();
             peer.on('open', (id) => {
@@ -658,7 +660,6 @@
             });
         });
 
-        // Bouton de partage direct du code salon sur WhatsApp
         shareCodeWhatsApp.addEventListener('click', () => {
             if (!generatedRoomId) {
                 alert("Patiente une seconde, génération du code en cours...");
@@ -681,9 +682,7 @@
                 alert("Entre un code valide !");
                 return;
             }
-            if (peer) {
-                peer.destroy();
-            }
+            if (peer) { peer.destroy(); }
             peer = new Peer();
             peer.on('open', () => {
                 conn = peer.connect(code);
