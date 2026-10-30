@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- App Update Tag: SlateBattle-v2.3-CleanMultiplayer -->
+    <!-- App Update Tag: SlateBattle-v2.4-CoreEngine -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slate Battle - Le duel de mots</title>
@@ -46,7 +46,7 @@
         .arcade-header {
             text-align: center;
             background: rgba(11, 17, 32, 0.85);
-            padding: 12px;
+            padding: 10px;
             border-radius: 14px;
             border: 2px solid #854d0e;
         }
@@ -123,6 +123,7 @@
             width: 42px; height: 42px; border-radius: 12px; font-size: 1.1rem;
             display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none;
         }
+        .icon-btn:active { transform: scale(0.9); }
         
         #gameScreen {
             background: rgba(15, 23, 42, 0.95);
@@ -147,6 +148,15 @@
         .key-btn:disabled { background: #1e293b; color: #475569; }
         .hidden { display: none !important; }
         .room-box { background: #0b1120; padding: 10px; border-radius: 8px; color: #38bdf8; font-family: monospace; font-size: 1.1rem; margin: 8px 0; text-align: center; letter-spacing: 2px; border: 1px solid #334155; }
+        
+        /* Modals / Panneaux contextuels */
+        .modal-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10;
+        }
+        .modal-box {
+            background: #1e293b; border: 2px solid #f59e0b; padding: 20px; border-radius: 14px; width: 85%; text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -159,15 +169,15 @@
 
         <div class="arcade-screen-center">
             
-            <!-- 1. ÉCRAN D'ENREGISTREMENT (OBLIGATOIRE) -->
-            <div id="registerScreen" class="wood-menu-box">
-                <h3 style="color: #38bdf8;">Bienvenue !</h3>
-                <p style="font-size: 0.8rem; color: #94a3b8;">Entre ton pseudo pour t'enregistrer sur l'application :</p>
+            <!-- 1. ÉCRAN D'ENREGISTREMENT (Profil LocalStorage) -->
+            <div id="registerScreen" class="wood-menu-box hidden">
+                <h3 style="color: #38bdf8;">Profil Joueur</h3>
+                <p style="font-size: 0.8rem; color: #94a3b8;">Choisis ton pseudo pour commencer :</p>
                 <input type="text" id="registerNameInput" placeholder="Ton pseudo (ex: Dédé)..." maxlength="12">
-                <button class="btn-wood btn-green" id="registerBtn">💾 S'enregistrer & Jouer</button>
+                <button class="btn-wood btn-green" id="registerBtn">💾 Sauvegarder & Jouer</button>
             </div>
 
-            <!-- 2. MENU PRINCIPAL (Une fois enregistré) -->
+            <!-- 2. MENU PRINCIPAL -->
             <div id="menuScreen" class="wood-menu-box hidden">
                 <p style="color: #38bdf8; font-weight: bold;" id="welcomeUserDisp">Salut Joueur !</p>
                 <button class="btn-wood" id="localBtn">🎮 JOUER EN SOLO</button>
@@ -175,7 +185,7 @@
                 <button class="btn-wood" id="joinBtn">🔑 REJOINDRE PARTIE</button>
             </div>
 
-            <!-- 3. ÉCRAN HÔTE (Salon avec code à 4 chiffres) -->
+            <!-- 3. ÉCRAN HÔTE (Lobby 4 chiffres) -->
             <div id="hostScreen" class="wood-menu-box hidden">
                 <p style="color: #cbd5e1; font-size: 0.85rem;">Donne ce code à ton ami :</p>
                 <div class="room-box" id="myPeerId">Génération...</div>
@@ -192,7 +202,7 @@
                 <button class="btn-wood" id="backFromJoin" style="background: #334155; border-color: #64748b;">Retour</button>
             </div>
 
-            <!-- 5. ÉCRAN DE JEU INDépendant -->
+            <!-- 5. ÉCRAN DE JEU INDÉPENDANT -->
             <div id="gameScreen" class="hidden">
                 <div class="scoreboard">
                     <div><span id="myNameDisp">Moi</span> : <span id="myScore">0</span></div>
@@ -219,11 +229,31 @@
 
         </div>
 
+        <!-- BARRE D'ICÔNES DU BAS (Fonctionnelle) -->
         <div class="arcade-footer-icons" id="footerIcons">
-            <a href="https://wa.me/?text=Viens%20on%20joue%20à%20Slate%20Battle%20sur%20https://dd-dev-88.github.io/slate-battle/" target="_blank" class="icon-btn" title="Inviter">💬</a>
-            <button class="icon-btn" onclick="alert('Classement à venir !')">🏆</button>
-            <button class="icon-btn" onclick="alert('Slate Battle v2.3')">⭐</button>
-            <button class="icon-btn" onclick="alert('Audio actif')">⚙️</button>
+            <button class="icon-btn" onclick="openModal('chatModal')" title="Messages">💬</button>
+            <button class="icon-btn" onclick="openModal('statsModal')" title="Classement / Trophées">🏆</button>
+            <button class="icon-btn" onclick="openModal('shopModal')" title="Boutique / Indices">⭐</button>
+            <button class="icon-btn" onclick="openModal('settingsModal')" title="Paramètres">⚙️</button>
+        </div>
+    </div>
+
+    <!-- MODALS (FENÊTRES POPUP DES ICÔNES) -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 style="color: #f59e0b; margin-bottom: 10px;">⚙️ Paramètres</h3>
+            <p style="font-size: 0.8rem; color: #cbd5e1; margin-bottom: 10px;">Pseudo actuel : <b id="currentPseudoDisplay"></b></p>
+            <button class="btn-wood" onclick="resetProfile()" style="background: #dc2626; border-color: #ef4444; margin-bottom: 8px;">Changer de pseudo</button>
+            <button class="btn-wood" onclick="closeModals()" style="background: #334155; border-color: #64748b;">Fermer</button>
+        </div>
+    </div>
+
+    <div id="statsModal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3 style="color: #f59e0b; margin-bottom: 10px;">🏆 Statistiques</h3>
+            <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 5px;">Victoires en solo : <b id="statWins">0</b></p>
+            <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 15px;">Pièces accumulées : <b id="statCoins">75</b> 🪙</p>
+            <button class="btn-wood" onclick="closeModals()" style="background: #334155; border-color: #64748b;">Fermer</button>
         </div>
     </div>
 
@@ -259,8 +289,12 @@
         const myScoreEl = document.getElementById('myScore');
         const opponentScoreEl = document.getElementById('opponentScore');
         const statusInfo = document.getElementById('statusInfo');
+        const currentPseudoDisplay = document.getElementById('currentPseudoDisplay');
+        const statWins = document.getElementById('statWins');
+        const statCoins = document.getElementById('statCoins');
+        const playerCoinsEl = document.getElementById('playerCoins');
 
-        let playerName = "";
+        let playerName = localStorage.getItem('slate_username') || "";
         let opponentName = "Adversaire";
         let peer = null, conn = null, shortRoomId = "";
         
@@ -269,9 +303,26 @@
         let errors = 0;
         let myScore = 0;
         let opponentScore = 0;
+        let soloWins = parseInt(localStorage.getItem('slate_wins') || "0");
+        let playerCoins = parseInt(localStorage.getItem('slate_coins') || "75");
         let timeLeft = 60;
         let timer = null;
         let isMultiplayer = false;
+
+        // Initialisation au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            playerCoinsEl.innerText = playerCoins;
+            statCoins.innerText = playerCoins;
+            statWins.innerText = soloWins;
+
+            if (!playerName) {
+                showView('register');
+            } else {
+                welcomeUserDisp.innerText = `Salut, ${playerName} !`;
+                currentPseudoDisplay.innerText = playerName;
+                showView('menu');
+            }
+        });
 
         function showView(view) {
             registerScreen.classList.add('hidden');
@@ -291,17 +342,34 @@
             }
         }
 
-        // 1. Enregistrement obligatoire
+        // Enregistrement du profil dans localStorage
         registerBtn.addEventListener('click', () => {
             const name = registerNameInput.value.trim();
             if (!name) {
-                alert("Entre un pseudo valide pour t'enregistrer !");
+                alert("Entre un pseudo valide !");
                 return;
             }
             playerName = name;
+            localStorage.setItem('slate_username', playerName);
             welcomeUserDisp.innerText = `Salut, ${playerName} !`;
+            currentPseudoDisplay.innerText = playerName;
             showView('menu');
         });
+
+        function resetProfile() {
+            if (confirm("Veux-tu vraiment changer de pseudo ?")) {
+                localStorage.removeItem('slate_username');
+                location.reload();
+            }
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+        }
 
         function generateShortId() {
             return Math.floor(1000 + Math.random() * 9000).toString();
@@ -332,7 +400,15 @@
                 clearInterval(timer);
                 alert("Bravo, mot trouvé ! +1 point.");
                 myScore++;
-                if (isMultiplayer && conn && conn.open) {
+                if (!isMultiplayer) {
+                    soloWins++;
+                    playerCoins += 25;
+                    localStorage.setItem('slate_wins', soloWins);
+                    localStorage.setItem('slate_coins', playerCoins);
+                    statWins.innerText = soloWins;
+                    statCoins.innerText = playerCoins;
+                    playerCoinsEl.innerText = playerCoins;
+                } else if (conn && conn.open) {
                     conn.send({ type: 'SCORE_UPDATE', score: myScore });
                 }
                 setTimeout(startNewRound, 1500);
@@ -371,7 +447,6 @@
             startNewRound();
         });
 
-        // 2. Création du salon (Hôte) avec code court
         hostBtn.addEventListener('click', () => {
             showView('host');
             if (peer) peer.destroy();
@@ -388,10 +463,8 @@
                 conn = c;
                 isMultiplayer = true;
                 hostStatusText.innerText = "Adversaire connecté !";
-                
                 setupConnectionListeners();
                 
-                // Envoi de notre pseudo à l'invité dès la connexion
                 conn.on('open', () => {
                     conn.send({ type: 'PLAYER_INFO', name: playerName });
                 });
@@ -414,7 +487,6 @@
 
         joinBtn.addEventListener('click', () => showView('join'));
 
-        // 3. Rejoindre un salon avec le code à 4 chiffres
         connectBtn.addEventListener('click', () => {
             const code = joinCodeInput.value.trim();
             if (!code || code.length !== 4) {
@@ -430,7 +502,6 @@
                 setupConnectionListeners();
 
                 conn.on('open', () => {
-                    // Envoi de notre pseudo à l'hôte
                     conn.send({ type: 'PLAYER_INFO', name: playerName });
                     showView('game');
                     startNewRound();
@@ -474,7 +545,7 @@
             document.getElementById(`key-${letter}`).disabled = true;
 
             if (currentWord.includes(letter)) {
-                // Bonne lettre
+                // Correct
             } else {
                 errors++;
                 if (errors >= 6) {
