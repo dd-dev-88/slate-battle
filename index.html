@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- App Update Tag: SlateBattle-v1.9-SingleScreenUI -->
+    <!-- App Update Tag: SlateBattle-v2.0-SingleScreenSlate -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slate Battle - Le duel de mots</title>
@@ -25,93 +25,116 @@
             min-height: 100vh;
             width: 100vw;
             overflow-x: hidden;
-            padding: 0;
+            padding: 5px;
         }
 
-        /* Conteneur principal plein écran pour mobile */
-        .app-wrapper {
+        /* Conteneur principal simulant la structure de l'ardoise en plein écran mobile */
+        .slate-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 450px;
             height: 100vh;
-            max-height: 900px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 0 30px rgba(0,0,0,0.9);
-        }
-
-        /* MENU PRINCIPAL INTÉGRÉ DIRECTEMENT SUR L'IMAGE DE FOND */
-        #menuScreen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(to bottom, rgba(9, 13, 22, 0.4) 30%, rgba(9, 13, 22, 0.95) 75%), url('image.jpg');
+            max-height: 880px;
+            background-image: linear-gradient(rgba(10, 15, 25, 0.75), rgba(10, 15, 25, 0.85)), url('ardoise.jpg');
             background-size: cover;
             background-position: center;
+            border: 5px solid #5c3a21;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0,0,0,0.6);
+            padding: 12px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 20px 15px;
-            text-align: center;
+            position: relative;
         }
 
-        .header-top {
+        /* En-tête : Titre, Score et Pièces */
+        .slate-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(5px);
+            background: rgba(11, 17, 32, 0.85);
             padding: 8px 12px;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid rgba(56, 189, 248, 0.3);
         }
-
         h1 {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             color: #38bdf8;
             font-weight: 800;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
         }
-
         .coins-display {
             background: rgba(250, 204, 21, 0.2);
             color: #facc15;
             border: 1px solid rgba(250, 204, 21, 0.5);
-            padding: 3px 10px;
+            padding: 3px 8px;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: bold;
         }
 
-        /* Espace central transparent pour laisser voir l'illustration des amis */
-        .center-illustration-space {
-            flex-grow: 1;
-        }
-
-        /* Boutons d'action intégrés en bas par-dessus l'image */
-        .menu-actions {
+        /* Tableau noir central (Zone d'affichage du mot ou des options) */
+        .slate-board-center {
+            background: rgba(15, 23, 42, 0.75);
+            border: 2px dashed rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 12px;
-            border-radius: 14px;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            margin: 8px 0;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        #themeDisplay {
+            font-size: 0.75rem;
+            color: #38bdf8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+        }
+        #wordDisplay {
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            margin: 6px 0;
+            color: #facc15;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.9), 0 0 15px rgba(250, 204, 21, 0.5);
+        }
+        #timerDisplay {
+            font-size: 0.8rem;
+            color: #f87171;
+            font-weight: 700;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        /* Panneau de contrôle vertical unifié (Menu + Commandes) */
+        .control-panel {
+            background: rgba(11, 17, 32, 0.9);
+            padding: 10px;
+            border-radius: 12px;
             border: 1px solid rgba(56, 189, 248, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         input[type="text"] {
             width: 100%;
             padding: 10px;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 2px solid #334155;
-            background: rgba(11, 17, 32, 0.9);
+            background: #0b1120;
             color: white;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             text-align: center;
         }
         input[type="text"]:focus {
@@ -123,14 +146,17 @@
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: white;
             border: none;
-            padding: 12px;
-            font-size: 0.95rem;
+            padding: 11px;
+            font-size: 0.9rem;
             font-weight: 700;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             width: 100%;
             transition: transform 0.1s ease;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+            box-shadow: 0 3px 10px rgba(2, 132, 199, 0.4);
+            text-align: center;
+            text-decoration: none;
+            display: block;
         }
         .btn:active {
             transform: scale(0.96);
@@ -141,10 +167,7 @@
         }
         .btn-whatsapp {
             background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
-            text-decoration: none;
-            display: block;
-            text-align: center;
+            box-shadow: 0 3px 10px rgba(34, 197, 94, 0.4);
         }
         .btn-quit {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
@@ -163,33 +186,62 @@
             border: none;
             cursor: pointer;
         }
-        .hidden {
-            display: none !important;
+
+        /* Pavé de lettres virtuel */
+        .virtual-keyboard {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .key-btn {
+            background: rgba(51, 65, 85, 0.95);
+            color: white;
+            border: none;
+            padding: 10px 0;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .key-btn:active:not(:disabled) {
+            transform: scale(0.9);
+        }
+        .key-btn:disabled {
+            background: rgba(30, 41, 59, 0.5);
+            color: #64748b;
+            cursor: not-allowed;
         }
 
-        /* ÉCRAN HÔTE / REJOINDRE (Dans le même style intégré) */
-        .sub-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(9, 13, 22, 0.95);
-            padding: 25px 20px;
+        .taunts-container {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 4px;
             justify-content: center;
-            text-align: center;
+            margin-top: 4px;
+        }
+        .taunt-btn {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid #475569;
+            color: #cbd5e1;
+            padding: 4px 6px;
+            font-size: 0.65rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .taunt-btn:active {
+            transform: scale(0.95);
         }
 
         .room-box {
             background: #0b1120;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             color: #38bdf8;
             font-family: monospace;
-            font-size: 1rem;
-            margin: 10px 0;
+            font-size: 0.9rem;
+            margin: 6px 0;
             border: 1px solid #334155;
             word-break: break-all;
         }
@@ -206,62 +258,6 @@
             box-shadow: 0 0 8px #22c55e;
         }
 
-        /* ÉCRAN DE JEU (Avec l'ardoise.jpg) */
-        #gameScreen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(rgba(10, 15, 25, 0.8), rgba(10, 15, 25, 0.8)), url('ardoise.jpg');
-            background-size: cover;
-            background-position: center;
-            border: 4px solid #5c3a21;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        #themeDisplay {
-            font-size: 0.8rem;
-            color: #38bdf8;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-        }
-        #wordDisplay {
-            font-size: 1.6rem;
-            letter-spacing: 6px;
-            margin: 6px 0;
-            color: #facc15;
-            font-weight: bold;
-            text-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 20px rgba(250, 204, 21, 0.5);
-        }
-        #timerDisplay {
-            font-size: 0.85rem;
-            color: #f87171;
-            font-weight: 700;
-            background: rgba(15, 23, 42, 0.85);
-            padding: 4px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            border: 1px solid rgba(248, 113, 113, 0.3);
-        }
-        .scoreboard {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(11, 17, 32, 0.85);
-            padding: 6px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .scoreboard span {
-            color: #38bdf8;
-        }
         @keyframes shake {
             0% { transform: translateX(0); }
             20% { transform: translateX(-8px); }
@@ -270,57 +266,12 @@
             80% { transform: translateX(6px); }
             100% { transform: translateX(0); }
         }
-        .shake {
-            animation: shake 0.4s ease-in-out;
-        }
-        .virtual-keyboard {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            margin-top: 6px;
-        }
-        .key-btn {
-            background: rgba(51, 65, 85, 0.95);
-            color: white;
-            border: none;
-            padding: 12px 0;
-            font-size: 0.85rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .key-btn:active:not(:disabled) {
-            transform: scale(0.92);
-        }
-        .key-btn:disabled {
-            background: rgba(30, 41, 59, 0.5);
-            color: #64748b;
-            cursor: not-allowed;
-        }
-        .taunts-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            justify-content: center;
-            margin-top: 5px;
-        }
-        .taunt-btn {
-            background: rgba(30, 41, 59, 0.9);
-            border: 1px solid #475569;
-            color: #cbd5e1;
-            padding: 5px 8px;
-            font-size: 0.7rem;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .taunt-btn:active {
-            transform: scale(0.95);
-        }
+        .shake { animation: shake 0.4s ease-in-out; }
+        .hidden { display: none !important; }
         #chatLog {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #38bdf8;
-            height: 16px;
+            height: 14px;
             font-style: italic;
             text-shadow: 0 1px 2px rgba(0,0,0,0.9);
         }
@@ -328,75 +279,85 @@
 </head>
 <body>
 
-    <div class="app-wrapper" id="mainContainer">
-        <!-- MENU PRINCIPAL INTÉGRÉ SUR L'IMAGE DE FOND -->
-        <div id="menuScreen">
-            <div class="header-top">
-                <h1>Slate Battle ✏️</h1>
-                <div class="coins-display">🪙 <span id="playerCoins">75</span></div>
-            </div>
-
-            <div class="center-illustration-space"></div>
-
-            <div class="menu-actions">
-                <input type="text" id="playerNameInput" placeholder="Ton pseudo (ex: Dédé)..." maxlength="12">
-                <button class="btn" id="localBtn">🎮 Jouer en solo</button>
-                <button class="btn btn-secondary" id="hostBtn">🌐 Créer une partie (En ligne)</button>
-                <button class="btn btn-secondary" id="joinBtn">🔑 Rejoindre une partie</button>
-                <a href="https://wa.me/?text=Viens%20on%20joue%20à%20Slate%20Battle%20sur%20https://dd-dev-88.github.io/slate-battle/" target="_blank" class="btn btn-whatsapp">💬 Inviter sur WhatsApp</a>
-            </div>
-        </div>
-
-        <!-- ECRAN HOTE -->
-        <div id="hostScreen" class="sub-screen hidden">
+    <div class="slate-container" id="mainContainer">
+        <!-- EN-TÊTE FIXE SUR L'ARDOISE -->
+        <div class="slate-header">
             <h1>Slate Battle ✏️</h1>
-            <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 10px;">Envoie ce code à ton ami :</p>
-            <div class="room-box" id="myPeerId">Génération du code...</div>
-            <p style="font-size: 0.85rem; color: #f59e0b; margin-top: 8px;"><span class="status-badge" id="hostStatusBadge"></span><span id="hostStatusText">En attente de l'adversaire...</span></p>
-            <button class="btn btn-whatsapp" id="shareCodeWhatsApp" style="margin-top: 15px;">💬 Partager le code sur WhatsApp</button>
-            <button class="btn btn-secondary" id="backFromHost" style="margin-top: 10px;">Retour au menu</button>
+            <div class="coins-display">🪙 <span id="playerCoins">75</span></div>
         </div>
 
-        <!-- ECRAN REJOINDRE -->
-        <div id="joinScreen" class="sub-screen hidden">
-            <h1>Slate Battle ✏️</h1>
-            <input type="text" id="joinCodeInput" placeholder="Colle le code de ton ami..." style="margin: 15px 0;">
-            <button class="btn" id="connectBtn">Se connecter</button>
-            <button class="btn btn-secondary" id="backFromJoin" style="margin-top: 10px;">Retour</button>
-        </div>
+        <!-- ZONE CENTRALE (Tableau noir) -->
+        <div class="slate-board-center" id="boardCenter">
+            <!-- VUE MENU PRINCIPAL -->
+            <div id="menuContent" style="width: 100%;">
+                <p style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 8px;">Le duel de mots en ligne</p>
+                <div style="font-size: 2rem; margin: 10px 0;">🏫 ⚔️ 📝</div>
+                <p style="color: #cbd5e1; font-size: 0.75rem; font-style: italic;">Prépare ta craie et affronte tes amis !</p>
+            </div>
 
-        <!-- ECRAN DE JEU -->
-        <div id="gameScreen" class="hidden">
-            <div class="scoreboard">
-                <div><span id="myNameLabel">Moi</span> : <span id="myScore">0</span></div>
-                <div>Manche : <span id="currentRound">1</span>/3</div>
-                <div>Adversaire : <span id="opponentScore">0</span></div>
+            <!-- VUE HÔTE (En Ligne) -->
+            <div id="hostContent" class="hidden" style="width: 100%;">
+                <div style="font-size: 0.85rem; color: #94a3b8;">Partage ce code à ton ami :</div>
+                <div class="room-box" id="myPeerId">Génération...</div>
+                <div style="font-size: 0.8rem; color: #f59e0b;"><span class="status-badge" id="hostStatusBadge"></span><span id="hostStatusText">En attente...</span></div>
             </div>
-            
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span id="timerDisplay">⏳ 60s</span>
-                <button class="btn btn-quit" onclick="quitGame()">🚪 Quitter</button>
+
+            <!-- VUE REJOINDRE -->
+            <div id="joinContent" class="hidden" style="width: 100%;">
+                <div style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px;">Entre le code de ton ami :</div>
+                <input type="text" id="joinCodeInput" placeholder="Code salon...">
+                <button class="btn" id="connectBtn" style="margin-top: 8px;">Se connecter</button>
             </div>
-            
-            <div>
+
+            <!-- VUE JEU EN COURS -->
+            <div id="gameContent" class="hidden" style="width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 4px;">
+                    <span id="timerDisplay">⏳ 60s</span>
+                    <button class="btn btn-quit" onclick="quitGame()">🚪 Quitter</button>
+                </div>
                 <div id="themeDisplay">Thème : Chargement...</div>
                 <div id="wordDisplay">_ _ _ _ _</div>
                 <div id="chatLog"></div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                    <div id="errorsDisplay" style="color: #cbd5e1; font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.9);">Erreurs : 0 / 6</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 4px;">
+                    <div id="errorsDisplay" style="color: #cbd5e1; font-size: 0.75rem;">Erreurs : 0 / 6</div>
                     <button class="btn-bonus" onclick="buyHint()">💡 Indice (-20 🪙)</button>
                 </div>
             </div>
+        </div>
 
-            <!-- Pavé de lettres virtuel cliquable -->
-            <div class="virtual-keyboard" id="virtualKeyboard"></div>
+        <!-- PANNEAU DE CONTRÔLE / BOUTONS (Vertical pour une main) -->
+        <div class="control-panel" id="controlPanel">
+            <!-- Contrôles du Menu -->
+            <div id="menuActions" style="display: flex; flex-direction: column; gap: 6px;">
+                <input type="text" id="playerNameInput" placeholder="Ton pseudo (ex: Dédé)..." maxlength="12">
+                <button class="btn" id="localBtn">🎮 Jouer en solo</button>
+                <div style="display: flex; gap: 6px;">
+                    <button class="btn btn-secondary" id="hostBtn" style="flex: 1;">🌐 Créer</button>
+                    <button class="btn btn-secondary" id="joinBtn" style="flex: 1;">🔑 Rejoindre</button>
+                </div>
+                <a href="https://wa.me/?text=Viens%20on%20joue%20à%20Slate%20Battle%20sur%20https://dd-dev-88.github.io/slate-battle/" target="_blank" class="btn btn-whatsapp">💬 Inviter sur WhatsApp</a>
+            </div>
 
-            <!-- Boutons de taquineries rapides -->
-            <div class="taunts-container">
-                <button class="taunt-btn" onclick="sendTaunt('🐢 Plus vite !')">🐢 Plus vite</button>
-                <button class="taunt-btn" onclick="sendTaunt('😎 Facile !')">😎 Facile</button>
-                <button class="taunt-btn" onclick="sendTaunt('😱 Raté !')">😱 Raté</button>
-                <button class="taunt-btn" onclick="sendTaunt('🔥 Je chauffe !')">🔥 Je chauffe</button>
+            <!-- Contrôles de l'écran Hôte -->
+            <div id="hostActions" class="hidden">
+                <button class="btn btn-whatsapp" id="shareCodeWhatsApp">💬 Partager sur WhatsApp</button>
+                <button class="btn btn-secondary" id="backFromHost" style="margin-top: 6px;">Retour</button>
+            </div>
+
+            <!-- Contrôles de l'écran Rejoindre -->
+            <div id="joinActions" class="hidden">
+                <button class="btn btn-secondary" id="backFromJoin">Retour au menu</button>
+            </div>
+
+            <!-- Clavier virtuel (Actif uniquement pendant le jeu) -->
+            <div id="gameActions" class="hidden">
+                <div class="virtual-keyboard" id="virtualKeyboard"></div>
+                <div class="taunts-container">
+                    <button class="taunt-btn" onclick="sendTaunt('🐢 Plus vite !')">🐢 Plus vite</button>
+                    <button class="taunt-btn" onclick="sendTaunt('😎 Facile !')">😎 Facile</button>
+                    <button class="taunt-btn" onclick="sendTaunt('😱 Raté !')">😱 Raté</button>
+                    <button class="taunt-btn" onclick="sendTaunt('🔥 Je chauffe !')">🔥 Je chauffe</button>
+                </div>
             </div>
         </div>
     </div>
@@ -426,12 +387,6 @@
                 gainNode.gain.setValueAtTime(0.2, now);
                 gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
                 osc.start(now); osc.stop(now + 0.3);
-            } else if (type === 'taunt') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(440, now);
-                gainNode.gain.setValueAtTime(0.1, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-                osc.start(now); osc.stop(now + 0.15);
             } else if (type === 'win') {
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(523.25, now);
@@ -452,35 +407,16 @@
             }
         }
 
-        let bgMusicInterval = null;
-        function startBackgroundMusic() {
-            if (bgMusicInterval) return;
-            const notes = [261.63, 329.63, 392.00, 523.25];
-            let index = 0;
-            bgMusicInterval = setInterval(() => {
-                if (audioCtx.state === 'suspended') return;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(notes[index], audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.8);
-                index = (index + 1) % notes.length;
-            }, 1200);
-        }
+        // Éléments UI
+        const menuContent = document.getElementById('menuContent');
+        const hostContent = document.getElementById('hostContent');
+        const joinContent = document.getElementById('joinContent');
+        const gameContent = document.getElementById('gameContent');
 
-        function stopBackgroundMusic() {
-            if (bgMusicInterval) { clearInterval(bgMusicInterval); bgMusicInterval = null; }
-        }
-
-        const menuScreen = document.getElementById('menuScreen');
-        const hostScreen = document.getElementById('hostScreen');
-        const joinScreen = document.getElementById('joinScreen');
-        const gameScreen = document.getElementById('gameScreen');
+        const menuActions = document.getElementById('menuActions');
+        const hostActions = document.getElementById('hostActions');
+        const joinActions = document.getElementById('joinActions');
+        const gameActions = document.getElementById('gameActions');
         const mainContainer = document.getElementById('mainContainer');
 
         const localBtn = document.getElementById('localBtn');
@@ -494,13 +430,9 @@
         const myPeerIdEl = document.getElementById('myPeerId');
         const joinCodeInput = document.getElementById('joinCodeInput');
         const playerNameInput = document.getElementById('playerNameInput');
-        const myNameLabel = document.getElementById('myNameLabel');
         const wordDisplay = document.getElementById('wordDisplay');
         const themeDisplay = document.getElementById('themeDisplay');
         const timerDisplay = document.getElementById('timerDisplay');
-        const myScoreEl = document.getElementById('myScore');
-        const opponentScoreEl = document.getElementById('opponentScore');
-        const currentRoundEl = document.getElementById('currentRound');
         const errorsDisplay = document.getElementById('errorsDisplay');
         const chatLog = document.getElementById('chatLog');
         const virtualKeyboard = document.getElementById('virtualKeyboard');
@@ -517,39 +449,50 @@
             { word: "MAISON", theme: "Vie quotidienne" },
             { word: "LUMIERE", theme: "Vie quotidienne" },
             { word: "COULEUR", theme: "Vie quotidienne" },
-            { word: "FENETRE", theme: "Vie quotidienne" },
-            { word: "CUISINE", theme: "Vie quotidienne" },
             { word: "OCEAN", theme: "Nature & Environnement" },
             { word: "MONTAGNE", theme: "Nature & Environnement" },
             { word: "SOLEIL", theme: "Nature & Environnement" },
-            { word: "JARDIN", theme: "Nature & Environnement" },
-            { word: "ETOILE", theme: "Nature & Environnement" },
             { word: "VICTOIRE", theme: "Action & Compétition" },
             { word: "CHAMPION", theme: "Action & Compétition" },
-            { word: "AVENTURE", theme: "Action & Compétition" },
-            { word: "STRATEGIE", theme: "Action & Compétition" },
-            { word: "PUISSANCE", theme: "Action & Compétition" }
+            { word: "AVENTURE", theme: "Action & Compétition" }
         ];
 
         let currentItem = { word: "JAVASCRIPT", theme: "Technologie & Web" };
         let guessedLetters = [];
         let errors = 0;
         let maxErrors = 6;
-        let myScore = 0;
-        let opponentScore = 0;
-        let round = 1;
         let timeLeft = 60;
         let timer;
         let playerName = "Moi";
         let playerCoins = 75;
-
         let peer = null;
         let conn = null;
         let generatedRoomId = "";
 
-        function getRandomWordItem() {
-            const index = Math.floor(Math.random() * wordBank.length);
-            return wordBank[index];
+        function showScreen(screen) {
+            menuContent.classList.add('hidden');
+            hostContent.classList.add('hidden');
+            joinContent.classList.add('hidden');
+            gameContent.classList.add('hidden');
+
+            menuActions.classList.add('hidden');
+            hostActions.classList.add('hidden');
+            joinActions.classList.add('hidden');
+            gameActions.classList.add('hidden');
+
+            if (screen === 'menu') {
+                menuContent.classList.remove('hidden');
+                menuActions.classList.remove('hidden');
+            } else if (screen === 'host') {
+                hostContent.classList.remove('hidden');
+                hostActions.classList.remove('hidden');
+            } else if (screen === 'join') {
+                joinContent.classList.remove('hidden');
+                joinActions.classList.remove('hidden');
+            } else if (screen === 'game') {
+                gameContent.classList.remove('hidden');
+                gameActions.classList.remove('hidden');
+            }
         }
 
         function updateCoins(amount) {
@@ -559,7 +502,7 @@
 
         function buyHint() {
             if (playerCoins < 20) {
-                alert("Pas assez de pièces ! Gagne des manches pour en récolter.");
+                alert("Pas assez de pièces !");
                 return;
             }
             updateCoins(-20);
@@ -588,17 +531,12 @@
             wordDisplay.innerText = displayed;
             themeDisplay.innerText = `Thème : ${currentItem.theme}`;
             errorsDisplay.innerText = `Erreurs : ${errors} / ${maxErrors}`;
-            myScoreEl.innerText = myScore;
-            opponentScoreEl.innerText = opponentScore;
-            currentRoundEl.innerText = round;
-            myNameLabel.innerText = playerName;
 
             if (!displayed.includes('_')) {
                 clearInterval(timer);
                 playSound('win');
                 updateCoins(25);
                 alert("Bravo ! Tu as trouvé le mot ! (+25 🪙)");
-                myScore++;
                 nextRound();
             }
         }
@@ -613,8 +551,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     playSound('lose');
-                    alert("Temps écoulé ! L'adversaire marque le point.");
-                    opponentScore++;
+                    alert("Temps écoulé !");
                     nextRound();
                 }
             }, 1000);
@@ -626,30 +563,17 @@
         }
 
         function quitGame() {
-            if (confirm("Attention : quitter la partie maintenant te fera perdre la manche en cours. Es-tu sûr de vouloir abandonner ?")) {
+            if (confirm("Quitter la partie ?")) {
                 clearInterval(timer);
-                stopBackgroundMusic();
                 if (peer) peer.destroy();
-                gameScreen.classList.add('hidden');
-                menuScreen.classList.remove('hidden');
-                myScore = 0;
-                opponentScore = 0;
-                round = 1;
+                showScreen('menu');
             }
         }
 
         function nextRound() {
-            round++;
-            if (round > 3) {
-                stopBackgroundMusic();
-                alert(`Partie terminée !\n${playerName} : ${myScore} | Adversaire : ${opponentScore}`);
-                round = 1;
-                myScore = 0;
-                opponentScore = 0;
-            }
             errors = 0;
             guessedLetters = [];
-            currentItem = getRandomWordItem();
+            currentItem = wordBank[Math.floor(Math.random() * wordBank.length)];
             buildKeyboard();
             startTimer();
             updateDisplay();
@@ -658,33 +582,24 @@
         function startGame() {
             const enteredName = playerNameInput.value.trim();
             if (enteredName) { playerName = enteredName; }
-            menuScreen.classList.add('hidden');
-            hostScreen.classList.add('hidden');
-            joinScreen.classList.add('hidden');
-            gameScreen.classList.remove('hidden');
-            
-            currentItem = getRandomWordItem();
+            showScreen('game');
+            currentItem = wordBank[Math.floor(Math.random() * wordBank.length)];
             buildKeyboard();
-            timeLeft = 60;
             startTimer();
             updateDisplay();
-            startBackgroundMusic();
         }
 
-        localBtn.addEventListener('click', () => { startGame(); });
+        localBtn.addEventListener('click', startGame);
 
         hostBtn.addEventListener('click', () => {
             const enteredName = playerNameInput.value.trim();
             if (enteredName) { playerName = enteredName; }
-            menuScreen.classList.add('hidden');
-            hostScreen.classList.remove('hidden');
-            
+            showScreen('host');
             hostStatusBadge.classList.remove('connected');
-            hostStatusText.innerText = "En attente de l'adversaire...";
-            myPeerIdEl.innerText = "Génération du code...";
+            hostStatusText.innerText = "En attente...";
+            myPeerIdEl.innerText = "Génération...";
 
-            if (peer) { peer.destroy(); }
-
+            if (peer) peer.destroy();
             peer = new Peer();
             peer.on('open', (id) => {
                 generatedRoomId = id;
@@ -693,70 +608,40 @@
             peer.on('connection', (c) => {
                 conn = c;
                 hostStatusBadge.classList.add('connected');
-                hostStatusText.innerText = "Adversaire connecté ! Lancement...";
-                setupConnection();
-                setTimeout(() => { startGame(); }, 1200);
+                hostStatusText.innerText = "Connecté ! Lancement...";
+                setTimeout(startGame, 1000);
             });
         });
 
         shareCodeWhatsApp.addEventListener('click', () => {
-            if (!generatedRoomId) {
-                alert("Patiente une seconde, génération du code en cours...");
-                return;
-            }
-            const msg = encodeURIComponent(`Viens m'affrronter sur Slate Battle ! Voici mon code de salon : ${generatedRoomId} - Rejoins-moi ici : https://dd-dev-88.github.io/slate-battle/`);
+            if (!generatedRoomId) return;
+            const msg = encodeURIComponent(`Viens m'affronter sur Slate Battle ! Code : ${generatedRoomId} - https://dd-dev-88.github.io/slate-battle/`);
             window.open(`https://wa.me/?text=${msg}`, '_blank');
         });
 
         joinBtn.addEventListener('click', () => {
             const enteredName = playerNameInput.value.trim();
             if (enteredName) { playerName = enteredName; }
-            menuScreen.classList.add('hidden');
-            joinScreen.classList.remove('hidden');
+            showScreen('join');
         });
 
         connectBtn.addEventListener('click', () => {
             const code = joinCodeInput.value.trim();
-            if (!code) {
-                alert("Entre un code valide !");
-                return;
-            }
-            if (peer) { peer.destroy(); }
+            if (!code) { alert("Entre un code !"); return; }
+            if (peer) peer.destroy();
             peer = new Peer();
             peer.on('open', () => {
                 conn = peer.connect(code);
-                setupConnection();
                 startGame();
             });
         });
 
-        backFromHost.addEventListener('click', () => {
-            hostScreen.classList.add('hidden');
-            menuScreen.classList.remove('hidden');
-            if (peer) { peer.destroy(); peer = null; }
-        });
-
-        backFromJoin.addEventListener('click', () => {
-            joinScreen.classList.add('hidden');
-            menuScreen.classList.remove('hidden');
-            if (peer) { peer.destroy(); peer = null; }
-        });
-
-        function setupConnection() {
-            if (!conn) return;
-            conn.on('data', (data) => {
-                if (data.type === 'TAUNT') {
-                    playSound('taunt');
-                    chatLog.innerText = `💬 ${data.sender} : "${data.message}"`;
-                    setTimeout(() => { chatLog.innerText = ""; }, 4000);
-                }
-            });
-        }
+        backFromHost.addEventListener('click', () => { showScreen('menu'); if (peer) peer.destroy(); });
+        backFromJoin.addEventListener('click', () => { showScreen('menu'); if (peer) peer.destroy(); });
 
         window.sendTaunt = function(message) {
-            playSound('taunt');
             chatLog.innerText = `💬 ${playerName} : "${message}"`;
-            setTimeout(() => { chatLog.innerText = ""; }, 4000);
+            setTimeout(() => { chatLog.innerText = ""; }, 3000);
             if (conn && conn.open) {
                 conn.send({ type: 'TAUNT', sender: playerName, message: message });
             }
@@ -764,7 +649,6 @@
 
         function handleGuess(letter) {
             if (guessedLetters.includes(letter)) return;
-
             guessedLetters.push(letter);
             const keyBtn = document.getElementById(`key-${letter}`);
             if (keyBtn) keyBtn.disabled = true;
@@ -778,8 +662,7 @@
                 if (errors >= maxErrors) {
                     clearInterval(timer);
                     playSound('lose');
-                    alert(`Perdu ! Le mot était : ${currentItem.word}. L'adversaire marque le point.`);
-                    opponentScore++;
+                    alert(`Perdu ! Le mot était : ${currentItem.word}`);
                     nextRound();
                     return;
                 }
